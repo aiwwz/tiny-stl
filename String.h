@@ -7,7 +7,7 @@ public:
     String(const char *str);
     String(const String &rhs);
     ~String();
-    String& operator=(const String &rhs);
+    String & operator=(const String &rhs);
 
     void print();
 

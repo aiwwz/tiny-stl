@@ -4,20 +4,17 @@
 #include <iostream>
 using std::cout; using std::endl;
 
-String::String(){ //默认构造函数
-    m_str = new char[1];
-    m_str[0] = '\0';
-}
+String::String() : m_str(new char[1] ()) { } //默认构造函数
 
-String::String(const char *str){ //带参构造函数
-    m_str = new char[strlen(str) + 1];
+String::String(const char *str) //带参构造函数
+    : m_str(new char[strlen(str) + 1] ()) { 
     strcpy(m_str, str);
 }
 
 String::String(const String &rhs) //拷贝构造函数
     : m_str(new char[strlen(rhs.m_str) + 1]){
-        strcpy(m_str, rhs.m_str);
-    }
+    strcpy(m_str, rhs.m_str);
+}
 
 String::~String(){ //析构函数
     if(m_str != NULL){
@@ -25,9 +22,9 @@ String::~String(){ //析构函数
     }
 }
 
-String& String::operator=(const String &rhs){ //操作符=函数
+String & String::operator=(const String &rhs){ //操作符=函数
     if(&rhs != this){ //自赋值
-        free(m_str);  //销毁之前的
+        delete [] m_str;  //销毁之前的
         m_str = new char[strlen(rhs.m_str) + 1];
         strcpy(m_str, rhs.m_str);
     }
