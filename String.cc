@@ -70,7 +70,7 @@ String& String::operator+=(const String &rhs){
         m_str = tmp_str; //指向新空间
     }
     else{ //否则直接使用原始空间
-        strcpy(m_str + strlen(m_str), rhs.m_str);
+        strcat(m_str, rhs.m_str);
     }
 
     return *this;
@@ -96,6 +96,10 @@ std::size_t String::size() const {
 
 std::size_t String::capacity() const {
     return m_capacity;
+}
+
+const char* String::c_str() const {
+    return m_str;
 }
 
 
