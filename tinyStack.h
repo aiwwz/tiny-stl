@@ -1,58 +1,78 @@
-#ifndef __STACK_H__
-#define __STACK_H__
+#ifndef __TINY_STACK_H__
+#define __TINY_STACK_H__
 #include <iostream> 
 #include <stdlib.h>
+#include <deque>
 
-class Stack{
+template <typename _Tp, typename _Seq = std::deque<_Tp>> //默认基于deque实现
+class tinyStack{
+    /* 声明友元函数 */
+    template <typename _T, typename _S>
+    friend bool operator==(const tinyStack<_T, _S> &lhs, const tinyStack<_T, _S> &rhs);
+
+    template <typename _T, typename _S>
+    friend bool operator<(const tinyStack<_T, _S> &lhs, const tinyStack<_T, _S> &rhs);
+
+    /* 定义类型别名 */
+    using value_type        =   typename _Seq::value_type;
+    using size_type         =   typename _Seq::size_type;
+    using container_type    =   _Seq;
+    using reference         =   typename _Seq::reference;
+    using const_reference   =   typename _Seq::const_reference;
+
 public:
-    Stack():m_top(-1), m_capacity(10) {}
-    ~Stack() {}
+    /* 构造函数 */
+    tinyStack() : m_seq() {}
+    tinyStack(const _Seq &seq) : m_seq(seq) {}
 
-    void push(int elem){ //入栈
-        if(!full()){
-            m_elems[++m_top] = elem;
-        }
-        else{
-            std::cout << "Full stack!!!" << std::endl;
-            exit(1);
-        }
-    }
+    /* 成员函数 */
+    bool empty() { return m_seq.empty(); }
 
-    void pop(){ //出栈
-        if(!empty()){
-            m_top--;
-        }
-        else{
-            std::cout << "Empty stack!!!" << std::endl;
-            exit(1);
-        }
-    }
+    size_type size() { return m_seq.size(); }
 
-    int top() const { //获取栈顶元素
-        if(!empty()){
-            return m_elems[m_top];
-        }
-        else{
-            std::cout << "Empty stack!!!" << std::endl;
-            exit(1);
-        }
-    }
+    reference top() { return m_seq.back(); }
 
-    bool empty() const { //栈空?
-        return m_top == -1;
-    }
+    const_reference top() const { return m_seq.back(); }
 
-    bool full() const { //栈满?
-        return m_top + 1 == m_capacity;
-    }
+    void push(const value_type &elem) { m_seq.push_back(elem); }
 
+    void pop(){ m_seq.pop_back(); }
 
 private:
-    int m_elems[10]; //存储空间
-    int m_top;       //栈顶位置
-    int m_capacity;  //栈容量
+    _Seq m_seq; //底层容器
 };
 
+/* 定义友元函数 */
+template <typename _Tp, typename _Seq>
+bool operator==(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return lhs.m_seq == rhs.m_seq;
+}
 
-#endif /* __STACK_H__ */
+template <typename _Tp, typename _Seq>
+bool operator<(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return lhs.m_seq < rhs.m_seq;
+}
+
+/* 定义普通函数 -- 重用上面定义的友元函数 */
+template <typename _Tp, typename _Seq>
+bool operator!=(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return !(lhs == rhs);
+}
+
+template <typename _Tp, typename _Seq>
+bool operator>(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return rhs < lhs; //左右位置互换, 重用'<'
+}
+
+template <typename _Tp, typename _Seq>
+bool operator<=(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return !(lhs > rhs);
+}
+
+template <typename _Tp, typename _Seq>
+bool operator>=(const tinyStack<_Tp, _Seq> &lhs, const tinyStack<_Tp, _Seq> &rhs) {
+    return !(lhs < rhs);
+}
+
+#endif /* __TINY_STACK_H__ */
 

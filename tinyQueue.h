@@ -1,5 +1,5 @@
-#ifndef __TINYQUEUE_H__
-#define __TINYQUEUE_H__
+#ifndef __TINY_QUEUE_H__
+#define __TINY_QUEUE_H__
 /* 容器适配器 --> 队列(tinyQueue) */
 #include <deque>
 
@@ -77,4 +77,4 @@ bool operator>=(const tinyQueue<_Tp, _Seq> &lhs, const tinyQueue<_Tp, _Seq> &rhs
     return !(lhs < rhs);
 }
 
-#endif /* __TINYQUEUE_H__ */
+#endif /* __TINY_QUEUE_H__ */

@@ -1,35 +1,35 @@
-#include "String.h"
+#include "tinyString.h"
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
 using std::cin; using std::cout; using std::endl;
 
-String::String() //默认构造函数
+tinyString::tinyString() //默认构造函数
     : m_str(new char[INIT_CAPACITY] ())
     , m_size(0)
     , m_capacity(INIT_CAPACITY){ }
 
-String::String(const char *str) //带参构造函数
+tinyString::tinyString(const char *str) //带参构造函数
     : m_str(new char[strlen(str) + 1] ()) 
     , m_size(strlen(str))
     , m_capacity(Max(strlen(str), INIT_CAPACITY)){ 
           strcpy(m_str, str);
 }
 
-String::String(const String &rhs) //拷贝构造函数
+tinyString::tinyString(const tinyString &rhs) //拷贝构造函数
     : m_str(new char[strlen(rhs.m_str) + 1])
     , m_size(rhs.m_size)
     , m_capacity(Max(rhs.m_capacity, INIT_CAPACITY)){
           strcpy(m_str, rhs.m_str);
 }
 
-String::~String(){ //析构函数
+tinyString::~tinyString(){ //析构函数
     if(m_str != NULL){
         delete [] m_str;
     }
 }
 
-String& String::operator=(const String &rhs){ //操作符=函数:String字符串版本
+tinyString& tinyString::operator=(const tinyString &rhs){ //操作符=函数:String字符串版本
     if(&rhs != this){ //自赋值
         m_size = rhs.m_size;
         if(m_size > m_capacity){ //原始空间不足, 则申请新空间, 否则直接使用原始空间
@@ -48,13 +48,13 @@ String& String::operator=(const String &rhs){ //操作符=函数:String字符串
     return *this;
 }
 
-String& String::operator=(const char *str){ //操作符=函数:C语言字符串版本
-    *this = String(str); //重用
+tinyString& tinyString::operator=(const char *str){ //操作符=函数:C语言字符串版本
+    *this = tinyString(str); //重用
 
     return *this;
 }
 
-String& String::operator+=(const String &rhs){
+tinyString& tinyString::operator+=(const tinyString &rhs){
     m_size += rhs.m_size;
     if(m_size > m_capacity){ //原始空间不足, 则申请新空间 
         if(m_size > m_capacity * 2){
@@ -76,35 +76,35 @@ String& String::operator+=(const String &rhs){
     return *this;
 }
 
-String& String::operator+=(const char *str){
-    *this += String(str); //重用
+tinyString& tinyString::operator+=(const char *str){
+    *this += tinyString(str); //重用
 
     return *this;
 }
 
-char& String::operator[](std::size_t index){
+char& tinyString::operator[](std::size_t index){
     return m_str[index];
 }
 
-const char& String::operator[](std::size_t index) const {
+const char& tinyString::operator[](std::size_t index) const {
     return m_str[index];
 }
 
-std::size_t String::size() const {
+std::size_t tinyString::size() const {
     return m_size;
 }
 
-std::size_t String::capacity() const {
+std::size_t tinyString::capacity() const {
     return m_capacity;
 }
 
-const char* String::c_str() const {
+const char* tinyString::c_str() const {
     return m_str;
 }
 
 
 /* 关系运算符 */
-bool operator==(const String &lhs, const String &rhs){
+bool operator==(const tinyString &lhs, const tinyString &rhs){
     if(lhs.m_size != rhs.m_size){ //提升性能
         return false;
     }
@@ -112,33 +112,32 @@ bool operator==(const String &lhs, const String &rhs){
     return (strcmp(lhs.m_str, rhs.m_str) == 0);
 }
 
-bool operator!=(const String &lhs, const String &rhs){
+bool operator!=(const tinyString &lhs, const tinyString &rhs){
     return !(lhs == rhs); //重用==操作符函数
 }
 
-bool operator<(const String &lhs, const String &rhs){
+bool operator<(const tinyString &lhs, const tinyString &rhs){
     return (strcmp(lhs.m_str, rhs.m_str) < 0);
 }
 
-bool operator>(const String &lhs, const String &rhs){
+bool operator>(const tinyString &lhs, const tinyString &rhs){
     return (strcmp(lhs.m_str, rhs.m_str) > 0);
 }
 
-bool operator<=(const String &lhs, const String &rhs){
+bool operator<=(const tinyString &lhs, const tinyString &rhs){
     return !(lhs > rhs);
 }
 
-bool operator>=(const String &lhs, const String &rhs){
+bool operator>=(const tinyString &lhs, const tinyString &rhs){
     return !(lhs < rhs);
 }
 
-
 /* 输入输出 */
-std::ostream& operator<<(std::ostream &os, const String &rhs){
+std::ostream& operator<<(std::ostream &os, const tinyString &rhs){
     return os << rhs.m_str;
 }
 
-std::istream& operator>>(std::istream &is, String &rhs){
+std::istream& operator>>(std::istream &is, tinyString &rhs){
     char buf[4096] = {0}; 
     is >> buf; //有溢出风险!!!
     rhs = buf;
@@ -147,31 +146,31 @@ std::istream& operator>>(std::istream &is, String &rhs){
 
 
 /* 三类加法重载 */
-String operator+(const String &lhs, const String &rhs){
-    return String(lhs) += rhs;
+tinyString operator+(const tinyString &lhs, const tinyString &rhs){
+    return tinyString(lhs) += rhs;
 }
 
-String operator+(const String &lhs, const char *str){
-    return String(lhs) += str;
+tinyString operator+(const tinyString &lhs, const char *str){
+    return tinyString(lhs) += str;
 }
 
-String operator+(const char *str, const String &rhs){
-    return String(str) += rhs;
+tinyString operator+(const char *str, const tinyString &rhs){
+    return tinyString(str) += rhs;
 }
 
 
 int main(){
     //测试
-    String str1; //调用默认构造函数
+    tinyString str1; //调用默认构造函数
     cout << str1 << endl;
 
-    String str2 = "Hello,world"; //调用拷贝构造函数
+    tinyString str2 = "Hello,world"; //调用拷贝构造函数
     cout << str2 << endl;
 
-    String str3("wangdao"); //调用拷贝构造函数
+    tinyString str3("wangdao"); //调用拷贝构造函数
     cout << str3 << endl;
 
-    String str4 = str3; //调用拷贝构造函数
+    tinyString str4 = str3; //调用拷贝构造函数
     cout << str4 << endl;
 
     str4 = str2; //调用赋值运算符函数
