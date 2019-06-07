@@ -2,6 +2,8 @@
 #define __TINY_VECTOR_H__
 #include <memory>
 
+namespace tiny {
+
 template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
 class tinyVector {
 public:
@@ -47,6 +49,7 @@ private:
     _Tp *m_end_of_storage;
 };
 
+} //end of namespace tiny
 
 #endif /* __TINY_VECTOR_H__ */
 
