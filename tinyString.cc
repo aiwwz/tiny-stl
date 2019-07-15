@@ -29,6 +29,7 @@ tinyString::~tinyString(){ //析构函数
     }
 }
 
+/* 考虑facebook的方法 */
 tinyString& tinyString::operator=(const tinyString &rhs){ //操作符=函数:String字符串版本
     if(&rhs != this){ //自赋值
         m_size = rhs.m_size;
